@@ -1,0 +1,44 @@
+.History {
+  background: #ffffff;
+  border-radius: 8px;
+  box-shadow: 1px 1px 2px #696969;
+  height: fit-content;
+  margin-top: 2em;
+}
+
+.History ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  height: 30vh;
+  width: 250px;
+  overflow: scroll;
+}
+
+.History h3 {
+  font-size: 0.5em;
+  padding: 0.5em;
+  color: #fff;
+  margin-bottom: 0.5em;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+  background: #333;
+}
+
+.History button {
+  outline: transparent;
+  font-size: 0.4em;
+  color: #fff;
+  padding: 0.3em 0.5em;
+  border-radius: 8px;
+  background: #333;
+  cursor: pointer;
+  margin-bottom: 0.5em;
+}
+
+@media (max-width: 1000px) {
+  .History {
+    margin-bottom: 1em;
+    order: 2;
+  }
+}

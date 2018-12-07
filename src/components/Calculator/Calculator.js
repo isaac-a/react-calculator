@@ -1,7 +1,9 @@
 import React, { Component, Fragment } from 'react';
+import { connect } from 'react-redux';
 
 import Display from '../Display/Display';
 import Key from '../Key/Key';
+import * as actions from '../../store/actions';
 import classes from './Calculator.module.css';
 
 class Calculator extends Component {
@@ -30,9 +32,10 @@ class Calculator extends Component {
         waitingForOperand: false
       });
     } else {
+      const value =
+        displayValue === '0' ? String(digit) : displayValue + digit;
       this.setState({
-        displayValue:
-          displayValue === '0' ? String(digit) : displayValue + digit
+        displayValue: value
       });
     }
   }
@@ -52,40 +55,41 @@ class Calculator extends Component {
 
   togglePM() {
     const { displayValue } = this.state;
-
     this.setState({ displayValue: String(displayValue * -1) });
   }
 
   calcPercent() {
     const { displayValue } = this.state;
-
     this.setState({ displayValue: String(displayValue / 100) });
   }
 
   evaluate(nextOperator) {
     const { displayValue, value, operator } = this.state;
-    console.table([
-      ['displayValue', displayValue],
-      ['value', value],
-      ['operator', operator]
-    ]);
-    const nextVal = parseFloat(displayValue);
+    const currentValue = parseFloat(displayValue);
+
+    if (operator === '=' && nextOperator === '=') return;
 
     const operations = {
-      '+': (prevVal, nextVal) => prevVal + nextVal,
-      '-': (prevVal, nextVal) => prevVal - nextVal,
-      '*': (prevVal, nextVal) => prevVal * nextVal,
-      '/': (prevVal, nextVal) => prevVal / nextVal,
-      '=': (prevVal, nextVal) => nextVal
+      '+': (prevVal, currVal) => prevVal + currVal,
+      '-': (prevVal, currVal) => prevVal - currVal,
+      '*': (prevVal, currVal) => prevVal * currVal,
+      '/': (prevVal, currVal) => prevVal / currVal,
+      '=': (prevVal, currVal) => currVal
     };
 
     if (value === null) {
-      this.setState({ value: nextVal });
+      this.setState({ value: currentValue });
     } else if (operator) {
       const prevVal = value || 0;
-      const result = operations[operator](prevVal, nextVal);
+      const result = operations[operator](prevVal, currentValue);
+      const operationString = `${prevVal} ${operator} ${currentValue} = ${result}`;
 
-      this.setState({ displayValue: String(result), value: result });
+      this.setState({
+        displayValue: String(result),
+        value: result
+      });
+
+      this.props.addOperationString(operationString);
     }
 
     this.setState({ waitingForOperand: true, operator: nextOperator });
@@ -115,11 +119,18 @@ class Calculator extends Component {
           <Key char="0" handleClick={() => this.inputDigit(0)} />
           <Key char="." handleClick={() => this.inputDot()} />
           <Key char="=" handleClick={() => this.evaluate('=')} />
-          <Key char="" icon="color_lens" />
         </div>
       </Fragment>
     );
   }
 }
 
-export default Calculator;
+const mapDispatchToProps = dispatch => ({
+  addOperationString: operationString =>
+    dispatch(actions.addOperationString(operationString))
+});
+
+export default connect(
+  null,
+  mapDispatchToProps
+)(Calculator);

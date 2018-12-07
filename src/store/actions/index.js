@@ -1,16 +1,10 @@
 import * as types from './actionTypes';
 
-export const setDisplayValue = value => ({
-  type: types.SET_DISPLAY_VALUE,
-  value
+export const addOperationString = operationString => ({
+  type: types.ADD_OPERATION_STRING,
+  operationString
 });
 
-export const setValue = value => ({
-  type: types.SET_VALUE,
-  value
-});
-
-export const setOperator = operator => ({
-  type: types.SET_OPERATOR,
-  operator
+export const clearOperationsHistory = () => ({
+  type: types.CLEAR_OPERATIONS_HISTORY
 });

@@ -1,26 +1,23 @@
 import * as types from '../actions/actionTypes';
 
 const initialState = {
-  displayValue: '0',
-  value: null,
-  operator: null,
-  waitingForOperand: false,
   operationsHistory: []
 };
 
 export default (state = initialState, action) => {
   switch (action.type) {
-    case types.SET_DISPLAY_VALUE:
+    case types.ADD_OPERATION_STRING:
       return {
-        ...state
+        ...state,
+        operationsHistory: [
+          ...state.operationsHistory,
+          action.operationString
+        ]
       };
-    case types.SET_VALUE:
+    case types.CLEAR_OPERATIONS_HISTORY:
       return {
-        ...state
-      };
-    case types.SET_OPERATOR:
-      return {
-        ...state
+        ...state,
+        operationsHistory: []
       };
     default:
       return state;
